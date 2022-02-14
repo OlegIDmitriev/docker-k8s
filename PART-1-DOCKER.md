@@ -9,12 +9,12 @@ Prerequisites
 - [ ] Права локального админа для аккаунта участника {{ account }}
 - [ ] Доступен git repo с данным руководством {{ git-repo }} `gitlabci.raiffeisen.ru/container-trainings/training-docker`
 - [ ] Доступен корпоративный Docker {{ registry-host }} `artifactory.raiffeisen.ru`
-- [ ] Доступен корпоративный Docker {{ soft-registry }} с образами прикладного ПО `{{ registry-host }}/ext-rbru-techimage-docker`
-- [ ] Доступен корпоративный Docker {{ os-registry }} с образами ОС `{{ registry-host }}/ext-rbru-osimage-docker`
-- [ ] Доступен корпоративный Docker {{ project-registry }} учебного проекта `{{ registry-host }}/container-training-docker`
-- [ ] Доступен дистрибутив рабочего приложения {{ app-distr }} `{{ registry-host }}/artifactory/container-training-docker/dbo-1.0-SNAPSHOT.jar`
-- [ ] Доступен исходный проект рабочего приложения {{ app-src }} `{{ registry-host }}/artifactory/container-training-docker/dbo-1.0-SNAPSHOT-sources.jar`
-- [ ] Доступен необходимый компонент рабочего приложения {{ app-stub }} `{{ registry-host }}/artifactory/repo1-cache/com/github/tomakehurst/wiremock-standalone/2.27.2/wiremock-standalone-2.27.2.jar`
+- [ ] Доступен корпоративный Docker {{ soft-registry }} с образами прикладного ПО `artifactory.raiffeisen.ru/ext-rbru-techimage-docker`
+- [ ] Доступен корпоративный Docker {{ os-registry }} с образами ОС `artifactory.raiffeisen.ru/ext-rbru-osimage-docker`
+- [ ] Доступен корпоративный Docker {{ project-registry }} учебного проекта `artifactory.raiffeisen.ru/container-training-docker`
+- [ ] Доступен дистрибутив рабочего приложения {{ app-distr }} `artifactory.raiffeisen.ru/artifactory/container-training-docker/dbo-1.0-SNAPSHOT.jar`
+- [ ] Доступен исходный проект рабочего приложения {{ app-src }} `artifactory.raiffeisen.ru/artifactory/container-training-docker/dbo-1.0-SNAPSHOT-sources.jar`
+- [ ] Доступен необходимый компонент рабочего приложения {{ app-stub }} `artifactory.raiffeisen.ru/artifactory/repo1-cache/com/github/tomakehurst/wiremock-standalone/2.27.2/wiremock-standalone-2.27.2.jar`
 - [ ] Установлен DockerCE или совместимый менеджер контейнеров (e.g. Podman)
 ```shell
 sudo dnf install -y docker
@@ -129,19 +129,19 @@ docker system df
 - Сценарий "Как ...?"
 ```shell
 docker logout
-docker login {{ registry-host }}
+docker login artifactory.raiffeisen.ru
 ```
 
 - Сценарий "Как ...?"
 ```shell
-docker image pull {{ os-registry }}/alpine:3.14
+docker image pull artifactory.raiffeisen.ru/ext-rbru-osimage-docker/alpine:3.14
 docker system df
 ````
 
 - Сценарий "Как ...?"
 ```shell
 docker container ls [--all]
-docker container run --name demo -it {{ os-registry }}/alpine:3.14
+docker container run --name demo -it artifactory.raiffeisen.ru/ext-rbru-osimage-docker/alpine:3.14
 /# cat /etc/os-release
 /# exit 
 ```
@@ -176,7 +176,7 @@ docker container rm [--force] demo
 - Config files
 - Data files
 ```shell
-$ docker run --rm -it {{ os-registry }}/alpine ls
+$ docker run --rm -it artifactory.raiffeisen.ru/ext-rbru-osimage-docker/alpine ls
 bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
 ```
 
@@ -232,7 +232,7 @@ $ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock nate/dockviz imag
 │                       └─e96641ea7cdf Virtual Size: 182.6 MB Tags: training-docker/ekr-backend:1.0.0
 
 
-$ docker image history {{ project-registry }}/ekr/backend:1.0.0
+$ docker image history artifactory.raiffeisen.ru/container-training-docker/ekr/backend:1.0.0
 IMAGE          CREATED      CREATED BY                                      SIZE      COMMENT
 e96641ea7cdf   2 days ago   COPY dbo-1.0-SNAPSHOT.jar /dbo # buildkit       65.9MB    buildkit.dockerfile.v0
 <missing>      2 days ago   ENTRYPOINT ["java" "-jar" "dbo-1.0-SNAPSHOT.…   0B        buildkit.dockerfile.v0
@@ -268,37 +268,37 @@ docker image ls # TODO: собственные пометки участнико
 
 - Сценарий "Как ...?"
 ```shell
-docker image pull {{ os-registry }}/alpine:3.14
+docker image pull artifactory.raiffeisen.ru/ext-rbru-osimage-docker/alpine:3.14
 docker image ls
 ```
 
 - Сценарий "Как ...?"
 ```shell
-docker image history {{ os-registry }}/alpine:3.14
+docker image history artifactory.raiffeisen.ru/ext-rbru-osimage-docker/alpine:3.14
 
-docker image inspect {{ os-registry }}/alpine:3.14
-docker image inspect --format='{{.Id}} -> {{.Parent}}' {{ os-registry }}/alpine:3.14
+docker image inspect artifactory.raiffeisen.ru/ext-rbru-osimage-docker/alpine:3.14
+docker image inspect --format='{{.Id}} -> {{.Parent}}' artifactory.raiffeisen.ru/ext-rbru-osimage-docker/alpine:3.14
 ```
 
 - Сценарий "Как ...?"
 ```shell
-docker container run --name demo -it {{ os-registry }}/alpine:3.14
+docker container run --name demo -it artifactory.raiffeisen.ru/ext-rbru-osimage-docker/alpine:3.14
 /# touch side-effect.txt
 /# exit
 docker container diff demo
-docker container commit demo {{ project-registry }}/{{account}}/demo
+docker container commit demo artifactory.raiffeisen.ru/container-training-docker/{{account}}/demo
 docker image ls
 ```
 
 - Сценарий "Как ...?"
 ```shell
-docker image tag {{ project-registry }}/{{account}}/demo:latest {{ project-registry }}/{{account}}/demo:1.0.0
+docker image tag artifactory.raiffeisen.ru/container-training-docker/{{account}}/demo:latest artifactory.raiffeisen.ru/container-training-docker/{{account}}/demo:1.0.0
 docker image ls
 ```
 
 - Сценарий "Как ...?"
 ```shell
-docker image push {{ project-registry }}/{{account}}/demo:1.0.0
+docker image push artifactory.raiffeisen.ru/container-training-docker/{{account}}/demo:1.0.0
 ```
 
 - Сценарий "Как ...?"
@@ -307,9 +307,9 @@ docker image ls
 docker container rm demo
 docker image prune
 docker image ls
-docker image rm {{ project-registry }}/{{account}}/demo:1.0.0
+docker image rm artifactory.raiffeisen.ru/container-training-docker/{{account}}/demo:1.0.0
 docker image ls
-docker image rm {{ project-registry }}/{{account}}/demo:latest
+docker image rm artifactory.raiffeisen.ru/container-training-docker/{{account}}/demo:latest
 docker image ls
 docker image prune --all
 ```
