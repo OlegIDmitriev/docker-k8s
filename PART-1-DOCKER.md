@@ -261,18 +261,18 @@ Hands-on practice quest #01: pre-built disk image lifecycle (15+5)
 - [ ] Given пары участников
   
 - [ ] When участники именуют сценарии, выполняют команды и анализируют их вывод и поведение
-- Сценарий "Как ...?"
+- Сценарий "Как посмтреть список образов?"
 ```shell
 docker image ls # TODO: собственные пометки участников для будущего использования в проектах
 ```
 
-- Сценарий "Как ...?"
+- Сценарий "Как скачать образ в локальное репо?"
 ```shell
 docker image pull artifactory.raiffeisen.ru/ext-rbru-osimage-docker/alpine:3.14
 docker image ls
 ```
 
-- Сценарий "Как ...?"
+- Сценарий "Как посмотреть историю слоев и коммитов в образе?"
 ```shell
 docker image history artifactory.raiffeisen.ru/ext-rbru-osimage-docker/alpine:3.14
 
@@ -280,7 +280,7 @@ docker image inspect artifactory.raiffeisen.ru/ext-rbru-osimage-docker/alpine:3.
 docker image inspect --format='{{.Id}} -> {{.Parent}}' artifactory.raiffeisen.ru/ext-rbru-osimage-docker/alpine:3.14
 ```
 
-- Сценарий "Как ...?"
+- Сценарий "Как закомитить изменения в образ?"
 ```shell
 docker container run --name demo -it artifactory.raiffeisen.ru/ext-rbru-osimage-docker/alpine:3.14
 /# touch side-effect.txt
@@ -290,18 +290,18 @@ docker container commit demo artifactory.raiffeisen.ru/container-training-docker
 docker image ls
 ```
 
-- Сценарий "Как ...?"
+- Сценарий "Как поставить тэг образу?"
 ```shell
 docker image tag artifactory.raiffeisen.ru/container-training-docker/{{account}}/demo:latest artifactory.raiffeisen.ru/container-training-docker/{{account}}/demo:1.0.0
 docker image ls
 ```
 
-- Сценарий "Как ...?"
+- Сценарий "Как запушить образ в ремоут репозитории?"
 ```shell
 docker image push artifactory.raiffeisen.ru/container-training-docker/{{account}}/demo:1.0.0
 ```
 
-- Сценарий "Как ...?"
+- Сценарий "Как удалить неспользуемые образы?"
 ```shell
 docker image ls
 docker container rm demo
@@ -316,13 +316,13 @@ docker image prune --all
 
 - [ ] Then участники делятся проблемами и отвечают на вопросы
 - Как проименовали сценарии?
-- Какие способы идентификации образа? 
-- Какой тег у образа по умолчанию при создании коммитом?
-- Какой тег у образа по умолчанию при операции `pull`?
-- В чем физический смысл удаления образа командой `rm`?
-- Всегда ли удаляется образ по команде `rm`?
-- Что делает prune? 
-- Что такое [_dangling_](https://docs.docker.com/config/pruning/#prune-images) image?
+- Какие способы идентификации образа? -- repository + tag
+- Какой тег у образа по умолчанию при создании коммитом? -- latest
+- Какой тег у образа по умолчанию при операции `pull`? -- latest
+- В чем физический смысл удаления образа командой `rm`? -- удалить конкретный образ
+- Всегда ли удаляется образ по команде `rm`? -- если речь про контейнеры, то без допю ключа нельзя удалить зпущенные контейнеры
+- Что делает prune? -- очищает неиспользуемые образы или образы без тега
+- Что такое [_dangling_](https://docs.docker.com/config/pruning/#prune-images) image? -- образы без тега и не используемые не одним контейнером
 
 Жизненный цикл контейнера (20)
 -------------------------
